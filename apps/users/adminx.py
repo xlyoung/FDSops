@@ -14,15 +14,14 @@ import xadmin
 from xadmin import views
 from .models import VerifyCode
 
-
 class BaseSetting(object):
     enable_themes = True
     use_bootswatch = True
 
 
 class GlobalSettings(object):
-    site_title = "慕学生鲜后台"
-    site_footer = "mxshop"
+    site_title = "FDSops"
+    site_footer = "fdsops"
     # menu_style = "accordion"
 
 
