@@ -11,28 +11,37 @@ class UploadMessage(models.Model):
     上传信息
     """
 
-    UPLOAD_STATUS = (
-        (0, "上传成功"),
-        (1, "上传失败"),
+    # UPLOAD_STATUS = (
+    #     (0, "上传成功"),
+    #     (1, "上传失败"),
+    #
+    # )
 
-    )
-
-    name = models.CharField(max_length=100, verbose_name="md5值")
-
-    upload_time = models.DateTimeField(default=datetime.now, verbose_name="上传时间")
-
-    assess_ip = models.GenericIPAddressField(verbose_name="上传ip")
-    fds_ip = models.GenericIPAddressField(verbose_name="fds_ip")
-    upload_code = models.CharField(default="", max_length=30, verbose_name="上传状态码", help_text="上传状态码")
-    upload_status = models.IntegerField(choices=UPLOAD_STATUS, verbose_name="上传状态", help_text="上传状态")
+    file = models.FileField(blank=False, null=False)
+    remark = models.CharField(max_length=20)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 
-    class Meta:
-        verbose_name = '上传信息'
-        verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.name
+
+
+
+    # name = models.CharField(max_length=100, verbose_name="md5值")
+    # upload_time = models.DateTimeField(default=datetime.now, verbose_name="上传时间")
+    # url = models.ImageField(upload_to='%Y/%m/%d', null=False, blank=False, verbose_name='文件位置')
+
+    # assess_ip = models.GenericIPAddressField(verbose_name="上传ip")
+    # fds_ip = models.GenericIPAddressField(verbose_name="fds_ip")
+    # upload_code = models.CharField(default="", max_length=30, verbose_name="上传状态码", help_text="上传状态码")
+    # upload_status = models.IntegerField(choices=UPLOAD_STATUS, verbose_name="上传状态", help_text="上传状态")
+
+
+    # class Meta:
+    #     verbose_name = '上传信息'
+    #     verbose_name_plural = verbose_name
+    #
+    # def __str__(self):
+    #     return self.name
 
 
 
@@ -78,18 +87,3 @@ class FdsMessage(models.Model):
     def __str__(self):
         return self.group_name
 
-
-class UploadImage(models.Model):
-    """
-    商品轮播图
-    """
-    upload_file = models.ForeignKey(FileInfo, verbose_name="文件信息", related_name="images")
-    image = models.ImageField(upload_to="", verbose_name="图片", null=True, blank=True)
-    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
-
-    class Meta:
-        verbose_name = '上传图片'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.upload_file.name

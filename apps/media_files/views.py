@@ -25,14 +25,14 @@ class UploadPagination(PageNumberPagination):
     page_query_param = "page"
     max_page_size = 100
 
-
-class FileUploadView(views.APIView):
-    '''
-    上传文件接口
-    '''
+class FileUploadView(APIView):
+    """
+    上传文件
+    """
+    parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
-        file_serializer = UploadInfoSerializer(data=request.data)
+        file_serializer = UploadMessage(data=request.data)
         if file_serializer.is_valid():
             file_serializer.save()
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
