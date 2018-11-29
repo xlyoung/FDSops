@@ -4,7 +4,7 @@ import time
 from rest_framework import serializers
 
 
-from media_files.models import  UploadMessage ,FileInfo ,FdsMessage
+from media_files.models import  UploadMessage  ,FdsMessage
 
 import datetime
 import os
@@ -26,15 +26,10 @@ def get_now_time(format='%Y-%m-%d %H:%M:%S'):
 class UploadInfoSerializer(serializers.ModelSerializer):
     class Meta():
         model = UploadMessage
-        fields = ('file', 'remark', 'timestamp')
-
-
-
-#文件信息表
-class FileInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FileInfo
         fields = "__all__"
+
+
+
 
 #FDS信息表
 class FdsMessageSerializer(serializers.ModelSerializer):

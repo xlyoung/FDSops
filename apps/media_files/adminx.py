@@ -11,7 +11,7 @@
 @time: 2018/11/25
 """
 import xadmin
-from .models import UploadMessage ,FileInfo ,FdsMessage
+from .models import UploadMessage  ,FdsMessage
 
 
 class FileInfoAdmin(object):
@@ -24,7 +24,7 @@ class FileInfoAdmin(object):
     style_fields = {"file_desc": "ueditor"}
 
     class UploadImagesInline(object):
-        model = FileInfo
+        model = UploadMessage
         exclude = ["add_time"]
         extra = 1
         style = 'tab'
@@ -34,6 +34,6 @@ class FileInfoAdmin(object):
 
 
 
-xadmin.site.register(FileInfo, FileInfoAdmin)
+xadmin.site.register(UploadMessage, FileInfoAdmin)
 
 

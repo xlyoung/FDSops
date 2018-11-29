@@ -137,5 +137,15 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
+#上传限制
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+##域名
+WEB_HOST_NAME = "http://127.0.0.1"
+
+#限制图片大小
+#20M
+IMAGE_SIZE_LIMIT = 20000000
+
+#限制图片类型
+TYPE_LIST = ["png", "jpeg", "jpg"]
