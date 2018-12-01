@@ -1,0 +1,1 @@
+default_app_config='media_files.apps.MediaFilesConfig'

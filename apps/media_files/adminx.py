@@ -11,34 +11,33 @@
 @time: 2018/11/25
 """
 import xadmin
-from .models import UploadMessage  ,FdsMessage
+from .models import UploadMessage
 
 
-class FileInfoAdmin(object):
-    list_display = ["md5_value", "filename", "filesize", "stype", "add_time", "local_storage_path",
-                    "is_delete", "space"]
-    search_fields = ['name','stype',"md5_value" ]
-    list_editable = ["space", ]
-    list_filter = ["md5_value", "filename", "filesize", "stype", "add_time", "local_storage_path",
-                    "is_delete", "space"]
+class UploadMessageAdmin(object):
+    list_display = ["name", "fds_path", "file_size", "upload_time", "space", "file_desc"]
+    search_fields = ['name','fds_path',"space" ]
+    list_editable = ["space","file_desc","name" ]
+    list_filter = ["name", "fds_path", "file_size", "upload_time", "space"]
     style_fields = {"file_desc": "ueditor"}
 
-    class UploadImagesInline(object):
-        model = UploadMessage
-        exclude = ["add_time"]
-        extra = 1
-        style = 'tab'
+    readonly_fields = ["file_size","upload_time","name"]
 
-    inlines = [UploadImagesInline]
+    #刷新
+    refresh_times = (3,5)
+    #显示数据详情
+    show_detail_fields = ['name']
+
+    #数据导出
+    list_export = ('xls','xml','json')
+    list_export_fields = ('id','fds_path','upload_time','space','file_size')
 
 
 
 
-xadmin.site.register(UploadMessage, FileInfoAdmin)
 
-#测试上传
-from .models import Post
+xadmin.site.register(UploadMessage, UploadMessageAdmin)
 
-xadmin.site.register(Post)
+
 
 
