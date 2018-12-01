@@ -55,8 +55,8 @@ class UploadMessage(models.Model):
     """
     name = models.CharField(max_length=100, verbose_name="文件名")
     file_md5 = models.CharField(max_length=100, verbose_name="md5值")
-    # file_path = models.ImageField(upload_to=get_now_time('%Y%m/'), null=False, blank=False, verbose_name='文件位置')
-    file_path = models.ImageField(upload_to="", null=False, blank=False, verbose_name='文件位置')
+    file_path = models.FileField(null=False, blank=False, verbose_name='文件位置')
+    # file_path = models.FileField(upload_to=get_now_time('%Y%m/'),  verbose_name='文件位置')
     file_size = models.IntegerField(default=0, verbose_name="文件大小")
     file_type = models.CharField(max_length=100, verbose_name="文件类型")
     create_time = models.DateTimeField(default=datetime.now, verbose_name="文件创建时间")
@@ -79,12 +79,14 @@ class UploadMessage(models.Model):
 
     #获取图片地址
     def getImageUrl(self):
-        filename = self.file_md5 + "." + self.file_type
+        filename = self.name
         url = WEB_HOST_NAME + MEDIA_ROOT + get_now_time('/%Y%m/') + filename
         return url
 
+
+    #获取图片存储位置
     def getImagePath(self):
-        filename = self.file_md5 + "." + self.file_type
+        filename = self.name
         path = MEDIA_ROOT + get_now_time('/%Y%m/') + filename
         return path
 
@@ -104,6 +106,8 @@ class UploadMessage(models.Model):
 
 
 
-
+#测试上传POST
+class Post(models.Model):
+    image = models.FileField(max_length=255,null=True, blank=True)
 
 

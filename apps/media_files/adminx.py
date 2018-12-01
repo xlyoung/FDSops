@@ -36,4 +36,9 @@ class FileInfoAdmin(object):
 
 xadmin.site.register(UploadMessage, FileInfoAdmin)
 
+#测试上传
+from .models import Post
+
+xadmin.site.register(Post)
+
 

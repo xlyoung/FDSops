@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import sys
+
+
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
@@ -137,6 +141,9 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+#fds客户端配置
+CONFIG_ROOT = os.path.join(BASE_DIR, "config")
+
 #上传限制
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
@@ -149,3 +156,12 @@ IMAGE_SIZE_LIMIT = 20000000
 
 #限制图片类型
 TYPE_LIST = ["png", "jpeg", "jpg"]
+
+# 设置Django的文件存储类
+DEFAULT_FILE_STORAGE= 'utils.fds_storage.FDFSStorage'
+
+# 设置fdfs使用的client.conf文件路径
+FDFS_CLIENT_CONF= CONFIG_ROOT + "/client.conf"
+
+# 设置fdfs存储服务器上nginx的IP和端口号
+FDFS_URL='http://192.168.1.151:38080/'

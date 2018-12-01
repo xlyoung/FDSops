@@ -5,15 +5,21 @@ from rest_framework.pagination import PageNumberPagination
 
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework import status
-from django.core.files.base import ContentFile
+
+from .models import UploadMessage ,get_now_time
+from .serializers import UploadInfoSerializer
 
 
-from .models import UploadMessage ,FdsMessage ,get_now_time
-from .serializers import UploadInfoSerializer,FdsMessageSerializer
 
-import datetime
-from FDSops.settings import MEDIA_ROOT,TYPE_LIST
-from media_files.limit import pCalculateMd5 ,pIsAllowedFileSize ,pIsAllowedImageType ,pGetFileExtension
+
+from FDSops.settings import TYPE_LIST , MEDIA_ROOT
+from media_files.lib.limit import pCalculateMd5 ,pIsAllowedFileSize ,pIsAllowedImageType ,pGetFileExtension
+
+
+
+
+
+
 
 class UploadPagination(PageNumberPagination):
     page_size = 12
@@ -55,7 +61,7 @@ class FileUploadView(APIView):
             return Response(content, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
         serializer = UploadInfoSerializer(data={
-            'name' : file.name,
+            'name': file.name,
             'file_md5': md5,
             'file_path':request.data['file'] ,
             'file_size':file.size,
@@ -65,15 +71,10 @@ class FileUploadView(APIView):
 
         # serializer = UploadInfoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            test = serializer.save()
+            test.save()
             return Response(status=status.HTTP_201_CREATED)
         else:
-            # 保存 文件到磁盘
-
-            with open(MEDIA_ROOT+get_now_time('/%Y%m/')+md5+"."+ext, "wb+") as f:
-            # 分块写入
-                for chunk in file.chunks():
-                    f.write(chunk)
             return Response(serializer.errors)
 
 
