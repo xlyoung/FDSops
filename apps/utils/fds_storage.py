@@ -63,3 +63,4 @@ class FDFSStorage(Storage):
     def url(self, name):
         '''返回访问文件的url路径,就是ImageField字段image的url属性的值,image.url,默认的image的url是这样的格式：'/media/001.jpg' '''
         return self.base_url + name
+

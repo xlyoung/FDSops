@@ -1,23 +1,28 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 from rest_framework.pagination import PageNumberPagination
-
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
 
 from .models import UploadMessage
 from .serializers import UploadInfoSerializer
 
 
+from media_files.lib.limit import pIsAllowedFileSize
+from .filters import ImagesFilter
 
 
-from FDSops.settings import TYPE_LIST , MEDIA_ROOT
-from media_files.lib.limit import pCalculateMd5 ,pIsAllowedFileSize ,pIsAllowedImageType ,pGetFileExtension
-import os
+
+
 
 class UploadPagination(PageNumberPagination):
-    page_size = 12
+    page_size = 10
     page_size_query_param = 'page_size'
     page_query_param = "page"
     max_page_size = 100
@@ -51,7 +56,6 @@ class FileUploadView(APIView):
         serializer = UploadInfoSerializer(data={
                                            'name' : file.name,
                                            'fds_path'  : file,
-                                           'file_size'  : file.size,
                                             'space' : space_value,
                                             }
         )
@@ -60,3 +64,19 @@ class FileUploadView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors)
+
+
+
+class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet ):
+    """
+    图片列表页
+    """
+    queryset = UploadMessage.objects.all()
+    serializer_class = UploadInfoSerializer
+    pagination_class = UploadPagination
+
+    #过滤
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
+    filter_class = ImagesFilter
+    search_fields = ('name', 'space')
+    ordering_fields = ('id', 'upload_time')
