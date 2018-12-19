@@ -4,7 +4,7 @@ __author__ = 'young'
 import django_filters
 from django.db.models import Q
 
-from .models import UploadMessage
+from .models import UploadImagesMessage
 
 
 class ImagesFilter(django_filters.rest_framework.FilterSet):
@@ -14,5 +14,5 @@ class ImagesFilter(django_filters.rest_framework.FilterSet):
     start = django_filters.DateFilter('upload_time', label=('With start date'))
 
     class Meta:
-        model = UploadMessage
+        model = UploadImagesMessage
         fields = ['start']

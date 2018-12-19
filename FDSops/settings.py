@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'media_files.apps.MediaFilesConfig',
-    'scanhosts.apps.ScanhostsConfig',
     'DjangoUeditor',
     'xadmin',
     'crispy_forms',

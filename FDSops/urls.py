@@ -8,30 +8,22 @@ from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 
-from media_files.views import FileUploadView,ImageListViewset
+from media_files.views import ImageUploadViewSet,ImageListViewset
 from users.views import SmsCodeViewset
-from scanhosts.views import ScanHostsViewset
 
 
 router = DefaultRouter()
 
 #配置images
-router.register(r'images',ImageListViewset)
+router.register(r'images',ImageListViewset,base_name="images")
 
 #短信验证码生成
 router.register(r'codes', SmsCodeViewset, base_name="codes")
 
+#上传图片
 
-#扫描host主机
-router.register(r'scanhosts', ScanHostsViewset, base_name="orders")
+router.register(r'api/upload/image',ImageUploadViewSet,base_name="upload")
 
-
-
-
-
-# router = DefaultRouter()
-
-#
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -39,7 +31,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     #上传图片
-    url(r'upload/$', FileUploadView.as_view(), name='file-upload'),
+    # url(r'upload/$', ImageUploadViewSet.as_view(), name='file-upload'),
 
     #文档
     url(r'docs/',include_docs_urls(title="FDSops")),
@@ -49,6 +41,4 @@ urlpatterns = [
 
     #图片列表
     url(r'^',include(router.urls))
-
-    #
 ]

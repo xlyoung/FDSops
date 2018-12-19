@@ -1,6 +1,3 @@
-
-
-
 from FDSops.settings import IMAGE_SIZE_LIMIT ,TYPE_LIST
 
 from filetype import filetype

@@ -4,10 +4,7 @@ import time
 from rest_framework import serializers
 
 
-from media_files.models import  UploadMessage
-
-
-
+from media_files.models import  UploadImagesMessage
 
 
 
@@ -19,6 +16,16 @@ def get_now_time(format='%Y-%m-%d %H:%M:%S'):
 
 #上传信息表
 class UploadInfoSerializer(serializers.ModelSerializer):
+    upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+    name = serializers.CharField(read_only=True)
+
     class Meta():
-        model = UploadMessage
-        fields = "__all__"
+        model = UploadImagesMessage
+        fields = '__all__'
+
+
+    def create(self, validated_data):
+        name = validated_data['fds_path']
+        # fds_path = validated_data.get('file')
+        image = UploadImagesMessage.objects.create(name=name)
+        return image

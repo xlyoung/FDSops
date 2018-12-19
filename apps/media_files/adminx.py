@@ -11,7 +11,7 @@
 @time: 2018/11/25
 """
 import xadmin
-from .models import UploadMessage
+from .models import UploadImagesMessage
 
 
 class UploadMessageAdmin(object):
@@ -41,7 +41,7 @@ class UploadMessageAdmin(object):
     readonly_fields = ['upload_time']
 
 
-xadmin.site.register(UploadMessage, UploadMessageAdmin)
+xadmin.site.register(UploadImagesMessage, UploadMessageAdmin)
 
 
 
