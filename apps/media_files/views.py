@@ -75,6 +75,9 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet ):
     serializer_class = UploadInfoSerializer
     pagination_class = UploadPagination
 
+
+
+
     #过滤
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = ImagesFilter

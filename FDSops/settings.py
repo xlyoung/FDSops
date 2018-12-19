@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'media_files.apps.MediaFilesConfig',
+    'scanhosts.apps.ScanhostsConfig',
     'DjangoUeditor',
     'xadmin',
     'crispy_forms',
@@ -169,4 +170,61 @@ FDFS_URL='http://192.168.1.151:38080/'
 
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
 
+}
+
+
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
+
+#jwt认证时间
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+
+#手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
+
+#云片网api
+API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
+
+
+
+
+# #日志
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d] %(message)s',
+#             'datefmt': '%Y%m%d %H:%M:%S',
+#         },
+#     },
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'formatter': 'verbose',
+#             'filename': '%s/error.logs'%BASE_DIR,
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }
