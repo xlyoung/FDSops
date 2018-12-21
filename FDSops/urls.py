@@ -15,7 +15,7 @@ from users.views import SmsCodeViewset
 router = DefaultRouter()
 
 #配置images
-router.register(r'images',ImageListViewset,base_name="images")
+router.register(r'images',ImageListViewset)
 
 #短信验证码生成
 router.register(r'codes', SmsCodeViewset, base_name="codes")
@@ -29,9 +29,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
-    #上传图片
-    # url(r'upload/$', ImageUploadViewSet.as_view(), name='file-upload'),
 
     #文档
     url(r'docs/',include_docs_urls(title="FDSops")),

@@ -53,7 +53,6 @@ class FDFSStorage(Storage):
 
         # 获取返回的文件ID
         filename = res.get('Remote file_id')
-
         return filename
 
     def exists(self, name):

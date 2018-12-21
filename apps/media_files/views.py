@@ -11,7 +11,7 @@ from rest_framework import filters
 
 
 from .models import UploadImagesMessage
-from .serializers import UploadInfoSerializer
+from .serializers import UploadInfoSerializer,ListImageSerializer
 
 
 from media_files.lib.limit import pIsAllowedFileSize
@@ -37,12 +37,12 @@ class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 
-class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet ):
+class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     图片列表页
     """
     queryset = UploadImagesMessage.objects.all()
-    serializer_class = UploadInfoSerializer
+    serializer_class = ListImageSerializer
     pagination_class = UploadPagination
 
 
