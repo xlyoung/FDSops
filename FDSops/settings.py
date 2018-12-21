@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'media_files.apps.MediaFilesConfig',
     'DjangoUeditor',
+    'corsheaders',
     'xadmin',
     'crispy_forms',
     'rest_framework',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -198,7 +200,8 @@ REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 #云片网api
 API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
 
-
+#解决跨域问题
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # #日志
