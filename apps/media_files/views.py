@@ -14,7 +14,7 @@ from .models import UploadImagesMessage
 from .serializers import UploadInfoSerializer,ListImageSerializer
 
 
-from media_files.lib.limit import pIsAllowedFileSize
+
 from .filters import ImagesFilter
 
 

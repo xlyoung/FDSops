@@ -8,15 +8,14 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets , status
 from rest_framework.response import Response
 
-from .serializers import SmsSerializers, UserRegSerializer, UserDetailSerializer
+from .serializers import EmailSerializers, UserRegSerializer, UserDetailSerializer
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework import mixins
-from .models import VerifyCode
-from utils.yunpian import YunPian
-from FDSops.settings import API_KEY
+from .models import EmailVerifyCode
+from  utils.mailgun import SendEmailMailGun
 from random import choice
 
 User = get_user_model()
@@ -35,11 +34,11 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
+class EmailCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
     """
     发送短信验证码
     """
-    serializer_class = SmsSerializers
+    serializer_class = EmailSerializers
 
 
     def generate_code(self):
@@ -54,25 +53,25 @@ class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
         return "".join(random_str)
 
 
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        mobile = serializer.validated_data["mobile"]
-        yun_pian = YunPian(API_KEY)
-        code = self.generate_code()
-        sms_status = yun_pian(API_KEY,code=code,mobile=mobile)
+        email = serializer.validated_data["email"]
 
-        if sms_status["code"] != 0:
+        mailgun = SendEmailMailGun()
+        code = self.generate_code()
+        email_status = mailgun.send_email(code=code,email=email)
+
+        if email_status != 0:
             return Response({
-                "mobile":sms_status["msg"]
+                "email":email_status["msg"]
             }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            code_record = VerifyCode(code=code, mobile=mobile)
+            code_record = EmailVerifyCode(code=code, email=email)
             code_record.save()
             return Response({
-                "mobile":mobile
+                "email":email
             }, status=status.HTTP_201_CREATED)
 
 

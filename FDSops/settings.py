@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rest_framework',
     'django_filters',
-
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -196,12 +196,28 @@ JWT_AUTH = {
 #手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 
+#邮箱地址正则表达式
+REGEX_EMAIL= "^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$"
+
 
 #云片网api
-API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
+# API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
 
 #解决跨域问题
 CORS_ORIGIN_ALLOW_ALL = True
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": "087ec5c68223b0e82847db214ea08570-9b463597-c46833a9",
+    "MAILGUN_SENDER_DOMAIN": 'sandbox27bf4689af6b4b8ea4610e5e3e58840a.mailgun.org',  # your Mailgun domain, if needed
+}
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
+DEFAULT_FROM_EMAIL = "yangzhuohua@fastersoft.com.cn"  # if you don't already have this in settings
+
+#发送邮件地址
+SENDEMAIL = "fdsops@qu84.com"
+
+
+
 
 
 # #日志

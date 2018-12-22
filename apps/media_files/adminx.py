@@ -16,13 +16,13 @@ from .models import UploadImagesMessage
 
 class UploadMessageAdmin(object):
     # 设置列表显示字段
-    list_display = ["name", "fds_path", "upload_time", "space", "file_desc"]
+    list_display = ["id","name", "fds_path", "upload_time", "space", "file_desc"]
     # 设置列表查询字段
-    search_fields = ['name','fds_path',"space" ]
+    search_fields = ['id','name','fds_path',"space" ]
     #设置字段可以直接在列表页修改
     list_editable = ["space","file_desc","name" ]
     # 设置列表过滤字段
-    list_filter = ["name", "fds_path", "upload_time", "space"]
+    list_filter = ["id","name", "fds_path", "upload_time", "space"]
 
     style_fields = {"file_desc": "ueditor"}
 
@@ -38,7 +38,7 @@ class UploadMessageAdmin(object):
     list_export_fields = ('id','fds_path','upload_time','space')
 
     #只读字段
-    readonly_fields = ['upload_time']
+    readonly_fields = ['upload_time','name']
 
 
 xadmin.site.register(UploadImagesMessage, UploadMessageAdmin)

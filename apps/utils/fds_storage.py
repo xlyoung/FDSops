@@ -35,8 +35,10 @@ class FDFSStorage(Storage):
         # 创建一个Fdfs_client对象
 
         client = Fdfs_client(client_conf_obj)
+
         # 上传文件到fast dfs系统中
         res = client.upload_by_buffer(content.read())
+
 
         # dict
         # {
