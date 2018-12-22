@@ -3,19 +3,24 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+
 from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets , status
 from rest_framework.response import Response
-
-from .serializers import EmailSerializers, UserRegSerializer, UserDetailSerializer
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework import mixins
+
+from .serializers import EmailSerializers, UserRegSerializer, UserDetailSerializer
 from .models import EmailVerifyCode
 from  utils.mailgun import SendEmailMailGun
+
+
+
 from random import choice
 
 User = get_user_model()
@@ -72,6 +77,7 @@ class EmailCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
             code_record.save()
             return Response({
                 "email":email
+
             }, status=status.HTTP_201_CREATED)
 
 

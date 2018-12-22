@@ -75,21 +75,17 @@ class UserRegSerializer(serializers.ModelSerializer):
         #     pass
 
         verify_records = EmailVerifyCode.objects.filter(email=self.initial_data["email"]).order_by("-add_time")
-        print (verify_records)
         if verify_records:
             last_record = verify_records[0]
             five_mintes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
             if five_mintes_ago > last_record.add_time:
                 raise serializers.ValidationError("验证码过期")
-
             if last_record.code != code:
                 raise serializers.ValidationError("验证码错误")
-
         else:
             raise serializers.ValidationError("验证码错误")
 
     def validate(self, attrs):
-        attrs["email"] = attrs["username"]
         del attrs["code"]
         return attrs
 

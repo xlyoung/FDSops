@@ -3,7 +3,7 @@ __author__ = 'young'
 
 import requests
 import json
-from FDSops.settings import API_KEY
+# from FDSops.settings import API_KEY
 
 
 

@@ -15,7 +15,6 @@ import sys
 
 
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
@@ -55,11 +54,12 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "utils.disable_csrf.DisableCSRFCheck",
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -215,6 +215,7 @@ DEFAULT_FROM_EMAIL = "yangzhuohua@fastersoft.com.cn"  # if you don't already hav
 
 #发送邮件地址
 SENDEMAIL = "fdsops@qu84.com"
+
 
 
 

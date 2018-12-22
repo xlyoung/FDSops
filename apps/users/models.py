@@ -8,7 +8,7 @@ from django.contrib.auth.models import AbstractUser
 
 class UserProfile(AbstractUser):
     """
-    用户
+    用户注册
     """
     name = models.CharField(max_length=30, null=True, blank=True, verbose_name="姓名")
     birthday = models.DateField(null=True, blank=True, verbose_name="出生年月")
