@@ -1,0 +1,415 @@
+yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel gd-devel wget zip unzip
+下载压缩包
+wget https://jaist.dl.sourceforge.net/project/pcre/pcre/8.42/pcre-8.42.tar.gz -O /usr/local/src/pcre-8.42.tar.gz
+
+#pcre安装
+cd /usr/local/src
+tar -zxf pcre-8.42.tar.gz
+cd pcre-8.42
+./configure --prefix=/usr/local/pcre
+make
+make install
+
+
+#安装FastDFS与nginx
+
+
+
+cd /usr/local/src
+
+git clone https://github.com/happyfish100/fastdfs-nginx-module.git
+
+cd fastdfs-nginx-module/
+
+
+vi fastdfs-nginx-module/src/config
+
+#改变的以下文件内容（否则nginx编译会失败）
+
+ngx_module_incs="/usr/include/fastdfs /usr/include/fastcommon/"
+CORE_INCS="$CORE_INCS /usr/include/fastdfs /usr/include/fastcommon/"
+
+
+
+
+cp  mod_fastdfs.conf /etc/fdfs/
+
+
+修改mod_fastdfs.conf 的
+vi /etc/fdfs/mod_fastdfs.conf
+
+# 连接超时时间
+connect_timeout=10
+
+# Tracker Server
+tracker_server=192.168.1.122:22122
+tracker_server=192.168.1.123:22122
+
+# StorageServer 默认端口
+storage_server_port=23000
+
+# 如果文件ID的uri中包含/group**，则要设置为true
+url_have_group_name = true
+
+# Storage 配置的store_path0路径，必须和storage.conf中的一致
+store_path0=/home/fastdfs/storage
+
+
+
+
+
+(注意fastfds 版本与 nginx_fastdfs版本是否一致)
+#nginx 安装
+wget http://nginx.org/download/nginx-1.15.6.tar.gz -O /usr/local/src/nginx-1.15.6.tar.gz
+
+
+
+添加水印模块：
+将水印ngx_http_image_filter_module.c 覆盖源文件 /usr/local/src/nginx-1.14.0/src/http/modules
+cp ngx_http_image_filter_module.c /usr/local/src/nginx-1.14.0/src/http/modules
+
+
+
+
+
+tar -zxf nginx-1.15.6.tar.gz
+cd nginx-1.15.6
+./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=../pcre-8.42 --with-stream --with-http_image_filter_module --with-http_gzip_static_module  --add-module=/usr/local/src/fastdfs-nginx-module-master/src  --add-module=/usr/local/src/ngx_cache_purge
+make
+make install
+
+
+
+
+
+#查看nginx模块
+
+
+修改默认配置列表，增加子配置文件和修改端口,增加日志格式
+
+worker_processes  auto;
+http {
+      ……..
+    log_format  wwwlog  '[$remote_addr] - [$remote_user] [$time_local] ["$request"] '
+        '[$status] [$body_bytes_sent] ["$http_referer"] '
+        '["$http_user_agent"] [$http_x_forwarded_for] ';
+###包含配置文件
+    include /usr/local/nginx/conf/vhost.d/*.conf;
+      …..
+        server {
+                   listen       18080;
+
+
+配置文件编写：
+mkdir -p /usr/local/nginx/conf/vhost.d
+mkdir -p /home/image
+cd /usr/local/nginx/conf/vhost.d
+
+3、访问文件
+
+简单的测试访问文件
+① 修改nginx.conf
+
+
+
+
+
+复制 FastDFS 的部分配置文件到/etc/fdfs 目录
+
+# cd /usr/local/src/fastdfs-5.05/conf
+
+# cp anti-steal.jpg http.conf mime.types /etc/fdfs/
+
+
+
+
+
+
+
+
+
+
+
+
+
+文件下载
+[root@nginx vhost.d]# cat file.conf
+server
+{
+        listen 80;
+        server_name  192.168.1.103;
+        index index.html index.htm ;
+        root /home/image;
+
+        location /group1/M00{
+        if ($arg_attname ~ "^(.*).(.*)") {
+                add_header Content-Disposition "attachment;filename=$arg_attname";
+        }
+
+
+
+
+
+        ngx_fastdfs_module;
+        }
+        access_log /home/download_access.log wwwlog;
+
+}
+
+文件上传
+注：这里涉及Django，请看第三章 django搭建
+上传index页面,这个是放在/home/imges里
+[root@nginx image]# cat index.html
+<html lang="CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Test upload</title>
+</head>
+<body>
+<h2>Select files to upload</h2>
+<form enctype="multipart/form-data" action="/upload" method="post">
+    <input type="file" name="file">
+
+
+        <input type="submit" name="submit" value="Upload">
+    <input type="hidden" name="test" value="value">
+</form>
+</body>
+</html>
+
+
+
+上传的配置文件 upload.conf
+server
+{
+        listen 80;
+        server_name  192.168.1.103;
+        index index.html index.htm ;
+        root /home/image;
+
+        location /upload {
+        #解决跨域问题
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        #客户端能上传的最大文件
+        client_max_body_size 100m;
+        #客户端上传文件的缓冲区大小
+        client_body_buffer_size 10m;
+        # 文件上传以后转交给后端的php代码处理
+        upload_pass  @python;
+        # 上传文件的临时存储位置，目录是散列的，应该存在子目录0 1 2 3 4 5 6 7 8 9
+        upload_store /home/upload_temp 1;
+        upload_store_access user:r;
+        # 设置请求体的字段
+        upload_set_form_field "${upload_field_name}_name" $upload_file_name;
+        upload_set_form_field "${upload_field_name}_content_type" $upload_content_type;
+        upload_set_form_field "${upload_field_name}_path" $upload_tmp_path;
+        # 指示后端关于上传文件的md5值和文件大小
+        upload_aggregate_form_field "${upload_field_name}_md5" $upload_file_md5;
+        upload_aggregate_form_field "${upload_field_name}_size" $upload_file_size;
+        # 指示原样转到后端的参数，可以用正则表达式表示
+        #upload_pass_form_field "^submit$|^description$";
+        upload_pass_form_field "^.*$";
+        upload_pass_args on;
+        }
+        location @python {
+        #解决跨域问题
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        #proxy_pass http://localhost:9000;
+        include  uwsgi_params;
+        uwsgi_pass  127.0.0.1:9000;
+        uwsgi_param UWSGI_SCRIPT uploadmodule.wsgi;
+        uwsgi_param UWSGI_CHDIR /home/uploadmodule;
+        client_max_body_size 100m;
+   }
+
+        access_log /home/upload_access.log wwwlog;
+
+}
+
+cd /usr/local/src/fastdfs-nginx-module-master/src
+cp mod_fastdfs.conf /etc/fdfs/
+vi mod_fastdfs.conf
+
+# 连接超时时间
+connect_timeout=10
+
+# Tracker Server
+tracker_server=file.ljzsg.com:22122
+
+# StorageServer 默认端口
+storage_server_port=23000
+
+# 如果文件ID的uri中包含/group**，则要设置为true
+url_have_group_name = true
+
+# Storage 配置的store_path0路径，必须和storage.conf中的一致
+store_path0=/home/fastdfs/file
+
+
+
+
+
+ln -s /home/fastdfs/file/data/ /home/fastdfs/file/data/M00
+
+
+
+配置图片
+
+proxy_cache_path /home/image/cache/uploads_thumb levels=1:2 keys_zone=uploads_thumb:10m max_size=50G;
+
+
+server
+{
+    listen 80;
+    server_name  img.test.com;
+    index index.html index.htm ;
+    root /home/image;
+    default_type image/png;
+    expires 7d;
+    gzip_static on;
+    add_header Cache-Control public;
+    add_header X-Pownered "nginx_image_filter";
+    # HTTP Response Header 增加 proxy_cache 的命中状态，以便于以后调试，检查问题
+    add_header X-Cache-Status $upstream_cache_status;
+    #proxy_pass http://img.tcloud.mobi;
+    # 将缩略图缓存在服务，避免每次请求都重新生成
+    proxy_cache uploads_thumb;
+    # 当收到 HTTP Header Pragma: no-cache 的时候，忽略 proxy_cache
+    # 此配置能让浏览器强制刷新的时候，忽略 proxy_cache 重新生成缩略图
+    proxy_cache_bypass $http_pragma;
+    # 由于 Upload 文件一般都没参数的，所以至今用 host + document_uri 作为
+    proxy_cache_key "$host$document_uri";
+    # 有效的文件，在服务器缓存 7 天
+    proxy_cache_valid 200 7d;
+    proxy_cache_use_stale error timeout invalid_header updating;
+    proxy_cache_revalidate on;
+    # 处理 proxy 的 error
+    proxy_intercept_errors on;
+    #error_page   415 = /assets/415.png;
+    #error_page   404 = /assets/404.png;
+
+
+
+
+  # 定义好尺寸缩略图
+  location ~*group1/M00/(.*)!(large|lg|md|sm|xs)$ {
+    default_type image/png;
+    set $filename $1;
+
+    if (-f $filename) {
+      break;
+    }
+
+    # 根据 URL 地址 ! 后面的图片版本来准备好需要的参数（宽度、高度、裁剪或缩放）
+    set $img_version $2;
+    set $img_type resize;
+    set $img_w    -;
+    set $img_h    -;
+    if ($img_version = 'large') {
+      set $img_type resize;
+      set $img_w    1920;
+    }
+    if ($img_version = 'lg') {
+      set $img_type crop;
+      set $img_w    192;
+      set $img_h    192;
+    }
+    if ($img_version = 'md') {
+      set $img_type crop;
+      set $img_w    96;
+      set $img_h    96;
+    }
+    if ($img_version = 'sm') {
+      set $img_type crop;
+      set $img_w    48;
+      set $img_h    48;
+    }
+    if ($img_version = 'xs') {
+      set $img_type crop;
+      set $img_w    32;
+      set $img_h    32;
+    }
+    rewrite ^ /_$img_type;
+  }
+
+
+#自定义图片
+  location ~*group1/M00/(.*)!(r|c)/(\d+)/(\d+)$ {
+    set $filename /$1;
+
+    if (-f $filename) {
+      break;
+    }
+
+    # 根据 URL 地址 ! r|c/300/400
+    set $img_version $2;
+    set $img_w    $3;
+    set $img_h    $4;
+    if ($img_version = 'r') {
+      set $img_type resize;
+    }
+    if ($img_version = 'c') {
+      set $img_type crop;
+    }
+    rewrite ^ /_$img_type;
+  }
+
+
+
+
+
+  # 原始图片
+  location /group1/M00 {
+    #alias /home/image/$filename;
+    alias /home/fastdfs/file/data;
+    default_type image/png;
+    expires 7d;
+    autoindex on;
+  }
+
+
+
+
+
+  # 缩放图片的处理
+  location /_resize {
+    alias /home/fastdfs/file/data/$filename;
+    #alias /home/image$filename;
+    image_filter resize $img_w $img_h;
+    image_filter_jpeg_quality 95;
+    image_filter_buffer         20M;
+    image_filter_interlace      on;
+  }
+
+  # 裁剪图片的处理
+  location /_crop {
+    alias /home/fastdfs/file/data/$filename;
+    image_filter crop $img_w $img_h;
+    image_filter_jpeg_quality 95;
+    image_filter_buffer         20M;
+    image_filter_interlace      on;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
