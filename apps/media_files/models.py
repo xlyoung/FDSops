@@ -1,11 +1,11 @@
 from django.db import models
 from DjangoUeditor.models import UEditorField
 
-
+from django.contrib.auth import get_user_model
 
 from datetime import datetime
 
-
+User = get_user_model()
 
 class UploadImagesMessage(models.Model):
     """
@@ -15,6 +15,7 @@ class UploadImagesMessage(models.Model):
     fds_path = models.ImageField( blank=True, verbose_name='上传图片地址')
     upload_time = models.DateTimeField(default=datetime.now, verbose_name="上传时间")
     space = models.CharField(max_length=100, null=True,blank=True,verbose_name="空间名")
+    user = models.ForeignKey(User, verbose_name="用户")
     file_desc = UEditorField(verbose_name=u"内容", imagePath="images/", width=1000, height=300,
                                filePath="files/", null=True,blank=True,default='')
 

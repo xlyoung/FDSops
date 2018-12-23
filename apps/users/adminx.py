@@ -29,6 +29,9 @@ class GlobalSettings(object):
 class VerifyCodeAdmin(object):
     list_display = ['code', 'email', "add_time"]
 
+    #设置字段可以直接在列表页修改
+    list_editable = ["code","email","add_time" ]
+
 
 xadmin.site.register(EmailVerifyCode, VerifyCodeAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)

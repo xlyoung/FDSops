@@ -67,13 +67,11 @@ class UserRegSerializer(serializers.ModelSerializer):
     )
 
     def validate_code(self, code):
-        # try:
-        #     verify_records = VerifyCode.objects.get(mobile=self.initial_data["username"], code=code)
-        # except VerifyCode.DoesNotExist as e:
-        #     pass
-        # except VerifyCode.MultipleObjectsReturned as e:
-        #     pass
-
+        """
+        验证注册码
+        :param code:
+        :return:
+        """
         verify_records = EmailVerifyCode.objects.filter(email=self.initial_data["email"]).order_by("-add_time")
         if verify_records:
             last_record = verify_records[0]

@@ -8,10 +8,13 @@ from rest_framework import generics
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 
 from .models import UploadImagesMessage
 from .serializers import UploadInfoSerializer,ListImageSerializer
+from utils.permissions import IsOwnerOrReadOnly
 
 
 
@@ -30,6 +33,10 @@ class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     create:
     上传图片
     """
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+
     queryset = UploadImagesMessage.objects.all()
     parser_classes = (MultiPartParser, )
     serializer_class = UploadInfoSerializer

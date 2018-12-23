@@ -32,7 +32,7 @@ class CustomBackend(ModelBackend):
     """
     def authenticate(self, username=None, password=None, **kwargs):
         try:
-            user = User.objects.get(Q(username=username)|Q(mobile=username))
+            user = User.objects.get(Q(username=username)|Q(email=username))
             if user.check_password(password):
                 return user
         except Exception as e:
@@ -124,3 +124,4 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
     def perform_create(self, serializer):
         return serializer.save()
+

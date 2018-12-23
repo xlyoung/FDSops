@@ -15,6 +15,10 @@ def get_now_time(format='%Y-%m-%d %H:%M:%S'):
 
 #上传信息表
 class UploadInfoSerializer(serializers.ModelSerializer):
+
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
     name = serializers.CharField(read_only=True)
     upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
     image_url = serializers.SerializerMethodField()
@@ -38,8 +42,8 @@ class UploadInfoSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = UploadImagesMessage
-        fields = ('id','name','upload_time','image_url','fds_path','space','file_desc')
-        # fields = '__all__'
+        fields = ('id','name','upload_time','image_url','fds_path','space','file_desc',"user")
+
 
 
 class ListImageSerializer(serializers.ModelSerializer):
