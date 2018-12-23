@@ -11,28 +11,16 @@ make
 make install
 
 
-#安装FastDFS与nginx
-
+#安装FastDFS与nginx 模块(由于有版本冲突，请使用附件里的)
 
 
 cd /usr/local/src
 
-git clone https://github.com/happyfish100/fastdfs-nginx-module.git
+unzip 5e5f3566bbfa57418b5506aaefbe107a42c9fcb1.zip
 
-cd fastdfs-nginx-module/
+mv fastdfs-nginx-module-5e5f3566bbfa57418b5506aaefbe107a42c9fcb1  fastdfs-nginx-module-master
 
-
-vi fastdfs-nginx-module/src/config
-
-#改变的以下文件内容（否则nginx编译会失败）
-
-ngx_module_incs="/usr/include/fastdfs /usr/include/fastcommon/"
-CORE_INCS="$CORE_INCS /usr/include/fastdfs /usr/include/fastcommon/"
-
-
-
-
-cp  mod_fastdfs.conf /etc/fdfs/
+cp  /usr/local/src/fastdfs-nginx-module/src/mod_fastdfs.conf /etc/fdfs/
 
 
 修改mod_fastdfs.conf 的
@@ -42,8 +30,7 @@ vi /etc/fdfs/mod_fastdfs.conf
 connect_timeout=10
 
 # Tracker Server
-tracker_server=192.168.1.122:22122
-tracker_server=192.168.1.123:22122
+tracker_server=tracker.com:22122
 
 # StorageServer 默认端口
 storage_server_port=23000
@@ -54,17 +41,9 @@ url_have_group_name = true
 # Storage 配置的store_path0路径，必须和storage.conf中的一致
 store_path0=/home/fastdfs/storage
 
-
-
-
-
-(注意fastfds 版本与 nginx_fastdfs版本是否一致)
-#nginx 安装
-wget http://nginx.org/download/nginx-1.15.6.tar.gz -O /usr/local/src/nginx-1.15.6.tar.gz
-
-
-
 添加水印模块：
+
+
 将水印ngx_http_image_filter_module.c 覆盖源文件 /usr/local/src/nginx-1.14.0/src/http/modules
 cp ngx_http_image_filter_module.c /usr/local/src/nginx-1.14.0/src/http/modules
 
@@ -72,6 +51,17 @@ cp ngx_http_image_filter_module.c /usr/local/src/nginx-1.14.0/src/http/modules
 
 
 
+
+#安装nix_cache_purge,做缓冲使用
+cd /usr/local/src
+git clone https://github.com/FRiCKLE/ngx_cache_purge.git
+
+
+
+
+(注意fastfds 版本与 nginx_fastdfs版本是否一致)
+#nginx 安装
+wget http://nginx.org/download/nginx-1.15.6.tar.gz -O /usr/local/src/nginx-1.15.6.tar.gz
 tar -zxf nginx-1.15.6.tar.gz
 cd nginx-1.15.6
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=../pcre-8.42 --with-stream --with-http_image_filter_module --with-http_gzip_static_module  --add-module=/usr/local/src/fastdfs-nginx-module-master/src  --add-module=/usr/local/src/ngx_cache_purge
@@ -100,18 +90,6 @@ http {
                    listen       18080;
 
 
-配置文件编写：
-mkdir -p /usr/local/nginx/conf/vhost.d
-mkdir -p /home/image
-cd /usr/local/nginx/conf/vhost.d
-
-3、访问文件
-
-简单的测试访问文件
-① 修改nginx.conf
-
-
-
 
 
 复制 FastDFS 的部分配置文件到/etc/fdfs 目录
@@ -122,138 +100,64 @@ cd /usr/local/nginx/conf/vhost.d
 
 
 
+配置文件编写：
+mkdir -p /usr/local/nginx/conf/vhost.d
+mkdir -p /home/nginx_acccess_log
+mkdir -p /home/cache/tmp
+mkdir -p /home/cache/tmp1
+cd /usr/local/nginx/conf/vhost.d
+
+1、配置storage.conf 访问静态文件
+
+        server {
+        listen       8888;
+        server_name  localhost;
+
+        # FastDFS 文件访问配置(fastdfs-nginx-module模块)
+        location ~/group([0-9])/M00 {
+            default_type image/png;
+            ngx_fastdfs_module;
+        }
+        }
+2、配置tracker.conf 负载均衡2个storage
+
+proxy_cache_path /home/cache/tmp levels=1:2 keys_zone=http-cache:10m max_size=50G;
 
 
+    server {
+        listen       80;
+        server_name  localhost;
+        #charset koi8-r;
+        access_log  /home/nginx_acccess_log/tracker.log  wwwlog;
 
-
-
-
-
-
-
-
-文件下载
-[root@nginx vhost.d]# cat file.conf
-server
-{
-        listen 80;
-        server_name  192.168.1.103;
-        index index.html index.htm ;
-        root /home/image;
-
-        location /group1/M00{
-        if ($arg_attname ~ "^(.*).(.*)") {
-                add_header Content-Disposition "attachment;filename=$arg_attname";
+        #设置 group 的负载均衡参数
+        location /group1/M00 {
+            proxy_next_upstream http_502 http_504 error timeout invalid_header;
+            proxy_cache http-cache;
+            proxy_cache_valid  200 304 12h;
+            proxy_cache_key $uri$is_args$args;
+            proxy_pass http://fdfs_group1;
+            expires 30d;
         }
 
 
-
-
-
-        ngx_fastdfs_module;
+        #设置清除缓存的访问权限
+        location ~/purge(/.*) {
+            allow 127.0.0.1;
+            allow 192.168.1.0/24;
+            deny all;
+            proxy_cache_purge http-cache $1$is_args$args;
         }
-        access_log /home/download_access.log wwwlog;
-
 }
 
-文件上传
-注：这里涉及Django，请看第三章 django搭建
-上传index页面,这个是放在/home/imges里
-[root@nginx image]# cat index.html
-<html lang="CN">
-<head>
-    <meta charset="UTF-8">
-    <title>Test upload</title>
-</head>
-<body>
-<h2>Select files to upload</h2>
-<form enctype="multipart/form-data" action="/upload" method="post">
-    <input type="file" name="file">
 
 
-        <input type="submit" name="submit" value="Upload">
-    <input type="hidden" name="test" value="value">
-</form>
-</body>
-</html>
+    #设置 group1 的服务器
+    upstream fdfs_group1 {
+         server 192.168.1.122:8888 weight=1 max_fails=2 fail_timeout=30s;
+         server 192.168.1.123:8888 weight=1 max_fails=2 fail_timeout=30s;
+    }
 
-
-
-上传的配置文件 upload.conf
-server
-{
-        listen 80;
-        server_name  192.168.1.103;
-        index index.html index.htm ;
-        root /home/image;
-
-        location /upload {
-        #解决跨域问题
-        add_header Access-Control-Allow-Origin *;
-        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
-        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
-        #客户端能上传的最大文件
-        client_max_body_size 100m;
-        #客户端上传文件的缓冲区大小
-        client_body_buffer_size 10m;
-        # 文件上传以后转交给后端的php代码处理
-        upload_pass  @python;
-        # 上传文件的临时存储位置，目录是散列的，应该存在子目录0 1 2 3 4 5 6 7 8 9
-        upload_store /home/upload_temp 1;
-        upload_store_access user:r;
-        # 设置请求体的字段
-        upload_set_form_field "${upload_field_name}_name" $upload_file_name;
-        upload_set_form_field "${upload_field_name}_content_type" $upload_content_type;
-        upload_set_form_field "${upload_field_name}_path" $upload_tmp_path;
-        # 指示后端关于上传文件的md5值和文件大小
-        upload_aggregate_form_field "${upload_field_name}_md5" $upload_file_md5;
-        upload_aggregate_form_field "${upload_field_name}_size" $upload_file_size;
-        # 指示原样转到后端的参数，可以用正则表达式表示
-        #upload_pass_form_field "^submit$|^description$";
-        upload_pass_form_field "^.*$";
-        upload_pass_args on;
-        }
-        location @python {
-        #解决跨域问题
-        add_header Access-Control-Allow-Origin *;
-        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept";
-        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
-        #proxy_pass http://localhost:9000;
-        include  uwsgi_params;
-        uwsgi_pass  127.0.0.1:9000;
-        uwsgi_param UWSGI_SCRIPT uploadmodule.wsgi;
-        uwsgi_param UWSGI_CHDIR /home/uploadmodule;
-        client_max_body_size 100m;
-   }
-
-        access_log /home/upload_access.log wwwlog;
-
-}
-
-cd /usr/local/src/fastdfs-nginx-module-master/src
-cp mod_fastdfs.conf /etc/fdfs/
-vi mod_fastdfs.conf
-
-# 连接超时时间
-connect_timeout=10
-
-# Tracker Server
-tracker_server=file.ljzsg.com:22122
-
-# StorageServer 默认端口
-storage_server_port=23000
-
-# 如果文件ID的uri中包含/group**，则要设置为true
-url_have_group_name = true
-
-# Storage 配置的store_path0路径，必须和storage.conf中的一致
-store_path0=/home/fastdfs/file
-
-
-
-
-
-ln -s /home/fastdfs/file/data/ /home/fastdfs/file/data/M00
 
 
 
@@ -398,8 +302,43 @@ server
 
 
 
+#对外nginx配置
+server {
+    listen 80;
+    server_name media.fastersoft.com.cn;
+    rewrite ^(.*)$ https://${server_name}$1 permanent;
+}
+server {
+        listen 443 ssl http2;
+        server_name media.fastersoft.com.cn;
+        root /home/media;
+        ssl_certificate /usr/local/nginx/ssl/media.fastersoft.com.cn.pem;
+        ssl_certificate_key /usr/local/nginx/ssl/media.fastersoft.com.cn.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        resolver 8.8.8.8;
+        location / {
+                proxy_pass              http://media_fastersoft;
+                proxy_set_header        Host $host;
+                proxy_set_header        X-Real-IP $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_connect_timeout   150;
+                proxy_send_timeout      100;
+                proxy_read_timeout      100;
+                proxy_buffers           4 32k;
+                client_max_body_size    500m; # Big number is we can post big commits.
+                client_body_buffer_size 128k;
 
+         }
+        access_log /home/logs/media.fastersoft.log;
+}
 
+    upstream media_fastersoft {
+         server 192.168.1.122:9999 weight=1 max_fails=2 fail_timeout=30s;
+         server 192.168.1.123:9999 weight=1 max_fails=2 fail_timeout=30s;
+    }
 
 
 
