@@ -3,7 +3,6 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
 from rest_framework.mixins import CreateModelMixin
@@ -17,7 +16,7 @@ from rest_framework import mixins
 
 from .serializers import EmailSerializers, UserRegSerializer, UserDetailSerializer
 from .models import EmailVerifyCode
-from  utils.mailgun import SendEmailMailGun
+from  utils.email import SendMail
 
 
 
@@ -64,9 +63,10 @@ class EmailCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
 
         email = serializer.validated_data["email"]
 
-        mailgun = SendEmailMailGun()
+
         code = self.generate_code()
-        email_status = mailgun.send_email(code=code,email=email)
+        send_to_email = SendMail(code=code,email=email)
+        email_status = send_to_email.sendmail(code=code,email=email)
 
         if email_status != 0:
             return Response({
