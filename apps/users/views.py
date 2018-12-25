@@ -33,8 +33,10 @@ class CustomBackend(ModelBackend):
         try:
             user = User.objects.get(Q(username=username)|Q(email=username))
             if user.check_password(password):
+                print ("ok")
                 return user
         except Exception as e:
+            print ("error")
             return None
 
 
@@ -110,7 +112,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
-
         re_dict = serializer.data
         payload = jwt_payload_handler(user)
         re_dict["token"] = jwt_encode_handler(payload)

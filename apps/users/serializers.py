@@ -51,7 +51,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ("name", "gender", "birthday", "email", "mobile")
 
 class UserRegSerializer(serializers.ModelSerializer):
-    code = serializers.CharField(required=True, write_only=True, max_length=4, min_length=4,label="验证码",
+    code = serializers.CharField(required=True, write_only=True, max_length=4, min_length=4,label="邮件验证码",
                                  error_messages={
                                      "blank": "请输入验证码",
                                      "required": "请输入验证码",
@@ -61,9 +61,12 @@ class UserRegSerializer(serializers.ModelSerializer):
                                  help_text="验证码")
     username = serializers.CharField(label="用户名", help_text="用户名", required=True, allow_blank=False,
                                      validators=[UniqueValidator(queryset=User.objects.all(), message="用户已经存在")])
-
     password = serializers.CharField(
         style={'input_type': 'password'},help_text="密码", label="密码", write_only=True,
+    )
+
+    email = serializers.EmailField(label="邮箱地址",help_text="邮箱地址",
+                                   validators=[UniqueValidator(queryset=User.objects.all(),message="该邮箱已注册")]
     )
 
     def validate_code(self, code):
@@ -86,6 +89,16 @@ class UserRegSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         del attrs["code"]
         return attrs
+
+    def create(self, validated_data):
+        user = User(
+            username = validated_data['username'],
+            email = validated_data['email']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
 
     class Meta:
         model = User
