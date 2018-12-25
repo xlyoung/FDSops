@@ -1,6 +1,6 @@
 import os
 import sys
-
+from .base_settings import  *
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -16,8 +16,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'k+m2t9w4ulc56jy2@@0#53%uk#wdsvz0s1f3ie8wy88b1y0b0x'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -38,6 +37,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rest_framework',
     'django_filters',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +157,7 @@ DEFAULT_FILE_STORAGE= 'utils.fds_storage.FDFSStorage'
 FDFS_CLIENT_CONF= CONFIG_ROOT + "/client.conf"
 
 # 设置fdfs存储服务器上nginx的IP和端口号
-FDFS_URL='http://192.168.1.151:38080/'
+FDFS_URL='http://media.fastersoft.com.cn/'
 
 
 

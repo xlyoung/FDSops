@@ -16,13 +16,13 @@ from .models import UploadImagesMessage
 
 class UploadMessageAdmin(object):
     # 设置列表显示字段
-    list_display = ["id","name", "fds_path", "upload_time", "space", "file_desc"]
+    list_display = ["id","name", "fds_path", "upload_time", "space", "file_desc","user"]
     # 设置列表查询字段
-    search_fields = ['id','name','fds_path',"space" ]
+    search_fields = ['id','name','fds_path',"space","user" ]
     #设置字段可以直接在列表页修改
     list_editable = ["space","file_desc","name" ]
     # 设置列表过滤字段
-    list_filter = ["id","name", "fds_path", "upload_time", "space"]
+    list_filter = ["id","name", "fds_path", "upload_time", "space","user"]
 
     style_fields = {"file_desc": "ueditor"}
 

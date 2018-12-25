@@ -11,6 +11,9 @@ import xadmin
 from media_files.views import ImageUploadViewSet,ImageListViewset
 from users.views import EmailCodeViewset,UserViewset
 
+from rest_framework_swagger.views import get_swagger_view
+
+
 
 router = DefaultRouter()
 
@@ -24,6 +27,7 @@ router.register(r'api/upload/image',ImageUploadViewSet,base_name="upload")
 router.register(r'users', UserViewset, base_name="users")
 
 
+schema_view = get_swagger_view(title="FDSops")
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -32,6 +36,10 @@ urlpatterns = [
 
     #文档
     url(r'docs/',include_docs_urls(title="FDSops")),
+
+    #swagger
+    # url(r"^docs/$", schema_view),
+
 
     #jwt的认证接口
     url(r'^login/', obtain_jwt_token),

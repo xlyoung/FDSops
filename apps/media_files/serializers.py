@@ -20,9 +20,8 @@ class UploadInfoSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     name = serializers.CharField(read_only=True)
-    upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+    upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
     image_url = serializers.SerializerMethodField()
-
 
     #获取图片fastdfs的地址id
     def get_image_url(self,image):
