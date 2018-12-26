@@ -1,8 +1,10 @@
-import os
+import os , sys
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DEV_ENV = False
+PROD_ENV = True
 
-DEV_ENV = True
-PROD_ENV = False
+
+
+
+
