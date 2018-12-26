@@ -51,8 +51,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "fdsops",
         'USER': 'root',
-        'PASSWORD': "123456",
-        'HOST': "127.0.0.1",
+        'PASSWORD': "1qa2ws#ED",
+        'HOST': "192.168.1.124",
         "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
     }
 }

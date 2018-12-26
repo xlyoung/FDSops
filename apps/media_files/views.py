@@ -12,13 +12,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 
-from .models import UploadImagesMessage
-from .serializers import UploadInfoSerializer,ListImageSerializer
+from .models import UploadImagesMessage,UploadFileMessage
+from .serializers import UploadImageSerializer,ListImageSerializer,UploadFileSerializer,ListFileSerializer
 from utils.permissions import IsOwnerOrReadOnly
 
 
 
-from .filters import ImagesFilter
+from .filters import ImagesFilter,FilesFilter
 
 
 
@@ -33,13 +33,28 @@ class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     create:
     上传图片
     """
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
 
 
     queryset = UploadImagesMessage.objects.all()
     parser_classes = (MultiPartParser, )
-    serializer_class = UploadInfoSerializer
+    serializer_class = UploadImageSerializer
+
+
+
+class FileUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create:
+    上传文件
+    """
+    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+
+    queryset = UploadFileMessage.objects.all()
+    parser_classes = (MultiPartParser, )
+    serializer_class = UploadFileSerializer
 
 
 
@@ -56,5 +71,21 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     #过滤
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = ImagesFilter
+    search_fields = ('name', 'space')
+    ordering_fields = ('id', 'upload_time')
+
+
+class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
+    """
+    文件列表页
+    """
+    queryset = UploadFileMessage.objects.all()
+    serializer_class = ListFileSerializer
+    pagination_class = UploadPagination
+
+
+    #过滤
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
+    filter_class = FilesFilter
     search_fields = ('name', 'space')
     ordering_fields = ('id', 'upload_time')

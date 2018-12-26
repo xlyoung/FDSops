@@ -8,7 +8,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 
-from media_files.views import ImageUploadViewSet,ImageListViewset
+from media_files.views import ImageUploadViewSet,ImageListViewset,FileUploadViewSet,FileListViewset
 from users.views import EmailCodeViewset,UserViewset
 
 from rest_framework_swagger.views import get_swagger_view
@@ -18,11 +18,15 @@ from rest_framework_swagger.views import get_swagger_view
 router = DefaultRouter()
 
 #配置images
-router.register(r'list/images',ImageListViewset,base_name="list")
+router.register(r'list/images',ImageListViewset,base_name="list_image")
+#配置files
+router.register(r'list/files',FileListViewset,base_name="list_file")
 #短信验证码生成
 router.register(r'codes', EmailCodeViewset, base_name="codes")
 #上传图片
-router.register(r'api/upload/image',ImageUploadViewSet,base_name="upload")
+router.register(r'api/upload/image',ImageUploadViewSet,base_name="upload_image")
+#上传文件
+router.register(r'api/upload/file',FileUploadViewSet,base_name="upload_file")
 #用户注册
 router.register(r'users', UserViewset, base_name="users")
 

@@ -2,8 +2,8 @@ import os
 import sys
 
 
-DEV_ENV = False
-PROD_ENV = True
+DEV_ENV = True
+PROD_ENV = False
 
 ROOT_URLCONF = 'FDSops.urls'
 WSGI_APPLICATION = 'FDSops.wsgi.application'
