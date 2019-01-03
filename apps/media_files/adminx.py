@@ -17,13 +17,13 @@ from .models import UploadFileMessage
 
 class UploadImageMessageAdmin(object):
     # 设置列表显示字段
-    list_display = ["id","name", "fds_path", "upload_time", "space", "file_desc","user"]
+    list_display = ["id","name", "file", "creat_time", "space", "file_desc","user"]
     # 设置列表查询字段
-    search_fields = ['id','name','fds_path',"space","user" ]
+    search_fields = ['id','name','file',"space","user" ]
     #设置字段可以直接在列表页修改
     list_editable = ["space","file_desc","name" ]
     # 设置列表过滤字段
-    list_filter = ["id","name", "fds_path", "upload_time", "space","user"]
+    list_filter = ["id","name", "file", "creat_time", "space","user"]
 
     style_fields = {"file_desc": "ueditor"}
 
@@ -34,21 +34,21 @@ class UploadImageMessageAdmin(object):
 
     #数据导出
     list_export = ('xls','xml','json')
-    list_export_fields = ('id','fds_path','upload_time','space')
+    list_export_fields = ('id','file','creat_time','space')
 
     #只读字段
-    readonly_fields = ['upload_time','name']
+    readonly_fields = ['creat_time','name']
 
 
 class UploadFileMessageAdmin(object):
     # 设置列表显示字段
-    list_display = ["id","name", "fds_path", "upload_time", "space", "file_desc","user"]
+    list_display = ["id","name", "file", "creat_time", "space", "file_desc","user"]
     # 设置列表查询字段
-    search_fields = ['id','name','fds_path',"space","user" ]
+    search_fields = ['id','name','file',"space","user" ]
     #设置字段可以直接在列表页修改
     list_editable = ["space","file_desc","name" ]
     # 设置列表过滤字段
-    list_filter = ["id","name", "fds_path", "upload_time", "space","user"]
+    list_filter = ["id","name", "file", "creat_time", "space","user"]
 
     style_fields = {"file_desc": "ueditor"}
 
@@ -59,10 +59,10 @@ class UploadFileMessageAdmin(object):
 
     #数据导出
     list_export = ('xls','xml','json')
-    list_export_fields = ('id','fds_path','upload_time','space')
+    list_export_fields = ('id','file','creat_time','space')
 
     #只读字段
-    readonly_fields = ['upload_time','name']
+    readonly_fields = ['creat_time','name']
 
 
 

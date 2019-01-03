@@ -8,7 +8,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 
-from media_files.views import ImageUploadViewSet,ImageListViewset,FileUploadViewSet,FileListViewset
+from media_files.views import ImageUploadViewSet,ImageListViewset,FileUploadViewSet,FileListViewset,test_upload
 from users.views import EmailCodeViewset,UserViewset
 
 from rest_framework_swagger.views import get_swagger_view
@@ -43,6 +43,7 @@ urlpatterns = [
 
     #swagger
     # url(r"^docs/$", schema_view),
+    # url(r'test/',test_upload),
 
 
     #jwt的认证接口

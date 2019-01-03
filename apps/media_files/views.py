@@ -17,7 +17,7 @@ from .serializers import UploadImageSerializer,ListImageSerializer,UploadFileSer
 from utils.permissions import IsOwnerOrReadOnly
 
 
-
+from django.shortcuts import render,render_to_response
 from .filters import ImagesFilter,FilesFilter
 
 
@@ -72,7 +72,7 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = ImagesFilter
     search_fields = ('name', 'space')
-    ordering_fields = ('id', 'upload_time')
+    ordering_fields = ('id', 'creat_time')
 
 
 class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
@@ -88,4 +88,9 @@ class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = FilesFilter
     search_fields = ('name', 'space')
-    ordering_fields = ('id', 'upload_time')
+    ordering_fields = ('id', 'creat_time')
+
+
+
+def test_upload(reuqest):
+    return render_to_response('upload.html')

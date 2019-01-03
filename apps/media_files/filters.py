@@ -16,14 +16,14 @@ class ImagesFilter(django_filters.rest_framework.FilterSet):
 
     id = django_filters.NumberFilter(field_name='id')
     name = django_filters.CharFilter(field_name='name')
-    fds_path = django_filters.CharFilter(field_name='fds_path')
+    file = django_filters.CharFilter(field_name='file')
     space = django_filters.CharFilter(field_name="space")
     user = django_filters.NumberFilter(field_name="user")
 
 
     class Meta:
         model = UploadImagesMessage
-        fields = ['id',"name","fds_path","space","user"]
+        fields = ['id',"name","file","space","user"]
 
 
 class FilesFilter(django_filters.rest_framework.FilterSet):
@@ -34,11 +34,11 @@ class FilesFilter(django_filters.rest_framework.FilterSet):
 
     id = django_filters.NumberFilter(field_name='id')
     name = django_filters.CharFilter(field_name='name')
-    fds_path = django_filters.CharFilter(field_name='fds_path')
+    file = django_filters.CharFilter(field_name='file')
     space = django_filters.CharFilter(field_name="space")
     user = django_filters.NumberFilter(field_name="user")
 
 
     class Meta:
         model = UploadFileMessage
-        fields = ['id',"name","fds_path","space","user"]
+        fields = ['id',"name","file","space","user"]

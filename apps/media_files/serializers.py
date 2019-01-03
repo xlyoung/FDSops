@@ -22,23 +22,22 @@ class UploadImageSerializer(serializers.ModelSerializer):
     # )
     user = serializers.CharField(read_only=True,default=1)
     name = serializers.CharField(read_only=True)
-    upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
-    image_url = serializers.SerializerMethodField()
+    creat_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
+    path = serializers.SerializerMethodField()
 
-    #获取图片fastdfs的地址id
-    def get_image_url(self,image):
-        image_url = image.fds_path
-        return image_url
+    # #获取图片fastdfs的地址id
+    def get_path(self,image):
+        path = image.file
+        return path
 
     #获取图片名称
     def validate(self, attrs):
-        attrs["name"] = attrs['fds_path'].name
+        attrs["name"] = attrs['file'].name
         return attrs
 
     class Meta():
         model = UploadImagesMessage
-        fields = ('id','name','upload_time','image_url','fds_path','space','file_desc',"user")
-
+        fields = ('id','name','creat_time','file','path','space','file_desc',"user")
 
 
 class UploadFileSerializer(serializers.ModelSerializer):
@@ -50,22 +49,22 @@ class UploadFileSerializer(serializers.ModelSerializer):
     # )
     user = serializers.CharField(read_only=True,default=1)
     name = serializers.CharField(read_only=True)
-    upload_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
-    file_url = serializers.SerializerMethodField()
+    creat_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
+    path = serializers.SerializerMethodField()
 
-    #获取文件fastdfs的地址id
-    def get_file_url(self,file):
-        file_url = file.fds_path
-        return file_url
+    # #获取文件fastdfs的地址id
+    def get_path(self,file):
+        path = file.file
+        return path
 
     #获取文件名称
     def validate(self, attrs):
-        attrs["name"] = attrs['fds_path'].name
+        attrs["name"] = attrs['file'].name
         return attrs
 
     class Meta():
         model = UploadFileMessage
-        fields = ('id','name','upload_time','file_url','fds_path','space','file_desc',"user")
+        fields = ('id','name','creat_time','path','file','space','file_desc',"user")
 
 
 
