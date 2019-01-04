@@ -34,7 +34,6 @@
 }
 }
 ```
-```
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 上传状态               |
@@ -47,8 +46,8 @@
 | file_desc   | 文件备注         			|
 ```
 
-###接口测试方法：
-- 获取用户jwt的token值（前提是已经注册用户，请参考手动测试的注册用户）
+### 接口测试方法：
+ - 获取用户jwt的token值（前提是已经注册用户，请参考手动测试的注册用户）
  - 请求地址：http://fdsops.fastersoft.com.cn/login/
  - post输入用户名密码,返回的是jwt的token值
 	![avatar](http://media.fastersoft.com.cn/group1/M00/00/00/wKgBelwjDbiAVXf6AABa1DQ1gG80671736)
@@ -65,6 +64,7 @@ Vary: Accept
 {
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6Inlhbmd6aHVvaHVhIiwiZXhwIjoxNTQ2NDA2ODc5LCJlbWFpbCI6Inlhbmd6aHVvaHVhQGZhc3RlcnNvZnQuY29tLmNuIn0.oekpz_XwIiSFZSbpeEgVcraP4yXRHXtHbS7aBpzZzD4"
 }
+	```
 	```
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
@@ -89,8 +89,8 @@ Vary: Accept
   - 返回参数说明
   与手动上传参数一致，可以参考。
   
-  ##1.2显示上传图片
-  ###图片列表接口
+  ## 1.2显示上传图片
+  ### 图片列表接口
   - 接口地址：http://fdsops.fastersoft.com.cn/list/images/
   - 传入参数说明：
   
