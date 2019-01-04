@@ -65,7 +65,8 @@ Vary: Accept
 {
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6Inlhbmd6aHVvaHVhIiwiZXhwIjoxNTQ2NDA2ODc5LCJlbWFpbCI6Inlhbmd6aHVvaHVhQGZhc3RlcnNvZnQuY29tLmNuIn0.oekpz_XwIiSFZSbpeEgVcraP4yXRHXtHbS7aBpzZzD4"
 }
-	```
+```
+
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 上传状态               |
