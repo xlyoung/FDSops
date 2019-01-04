@@ -56,7 +56,6 @@
  - 参数说明：
  
 	```json
-
 	{
 HTTP 200 OK
 Allow: POST, OPTIONS
@@ -112,6 +111,7 @@ Vary: Accept
   - 返回参数说明：
   
   	```json
+
 HTTP 200 OK
 Allow: GET, HEAD, OPTIONS
 Content-Type: application/json
@@ -140,7 +140,7 @@ Vary: Accept
             "user": 2
         }
      }
-	```
+
 
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
