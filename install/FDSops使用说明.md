@@ -55,7 +55,7 @@
 	![avatar](http://media.fastersoft.com.cn/group1/M00/00/00/wKgBelwjDbiAVXf6AABa1DQ1gG80671736)
  - 参数说明：
  
-	```json
+```json
 
 {
 HTTP 200 OK
