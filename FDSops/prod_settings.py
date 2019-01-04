@@ -22,11 +22,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
 #发送邮件的邮箱
-EMAIL_HOST_USER = 'noreply@fastersoft.com.cn'
+EMAIL_HOST_USER = ''
 #在邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = '(IJN0okm'
+EMAIL_HOST_PASSWORD = ''
 #收件人看到的发件人
-DEFAULT_FROM_EMAIL = '东华发思特<noreply@fastersoft.com.cn>'
+DEFAULT_FROM_EMAIL = ''
 EMAIL_USE_SSL = True
 
 TEMPLATES = [
@@ -51,8 +51,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "fdsops",
         'USER': 'root',
-        'PASSWORD': "1qa2ws#ED",
-        'HOST': "192.168.1.124",
+        'PASSWORD': "",
+        'HOST': "",
         "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
     }
 }
@@ -63,7 +63,7 @@ DATABASES = {
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'k+m2t9w4ulc56jy2@@0#53%uk#wdsvz0s1f3ie8wy88b1y0b0x'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,7 +91,7 @@ DEFAULT_FILE_STORAGE= 'utils.fds_storage.FDFSStorage'
 FDFS_CLIENT_CONF= CONFIG_ROOT + "/client.conf"
 
 # 设置fdfs存储服务器上nginx的IP和端口号
-FDFS_URL='http://media.fastersoft.com.cn/'
+FDFS_URL='http:///'
 
 
 
