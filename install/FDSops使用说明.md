@@ -16,6 +16,7 @@
  	 - 选择图片文件：
  	 ![avatar](http://media.fastersoft.com.cn/group1/M00/00/00/wKgBelwjDbiAVXf6AABa1DQ1gG80671736)
  - 参数说明：
+ 
 	```json
 	{
 	HTTP 201 Created
@@ -34,6 +35,7 @@
 }
 }
 ```
+
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 上传状态               |
@@ -64,13 +66,12 @@ Vary: Accept
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6Inlhbmd6aHVvaHVhIiwiZXhwIjoxNTQ2NDA2ODc5LCJlbWFpbCI6Inlhbmd6aHVvaHVhQGZhc3RlcnNvZnQuY29tLmNuIn0.oekpz_XwIiSFZSbpeEgVcraP4yXRHXtHbS7aBpzZzD4"
 }
 	```
-	```
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 上传状态               |
 | Allow		  | 允许的方法					|
 | token		|	token值					|
-    ```
+   
 - 根据token值去调用上传图片
  - 上传接口地址：http://fdsops.fastersoft.com.cn/api/upload/image/
  - 传入参数：1、http协议的Headers(Authorization)，Body(fds_path,space, file_desc)
@@ -137,7 +138,7 @@ Vary: Accept
         }
      }
 	```
-	```
+
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 请求状态               |
@@ -152,12 +153,12 @@ Vary: Accept
 | space	    | 空间名称（可用来做项目分类） |
 | file_desc   | 文件备注         			|
 |user|上传用户id|
-```
+
   
- ###后台管理系统地址：
+### 后台管理系统地址：
   - 地址：http://fdsops.fastersoft.com.cn/xadmin/
   - 账号密码：XXXXX XXXXX
-  ##更详细的文档说明，也可以参考：
+### 更详细的文档说明，也可以参考：
  - 文档地址：http://fdsops.fastersoft.com.cn/docs/ 
  - 里面有参数说明，前端js示例代码
    ![avatar](http://media.fastersoft.com.cn/group1/M00/00/00/wKgBelwjG-qAAHhDAAX6qjTulLA8942593)
