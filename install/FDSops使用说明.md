@@ -16,7 +16,6 @@
  	 - 选择图片文件：
  	 ![avatar](http://media.fastersoft.com.cn/group1/M00/00/00/wKgBelwjDbiAVXf6AABa1DQ1gG80671736)
  - 参数说明：
- 
 	```json
 	{
 	HTTP 201 Created
@@ -34,7 +33,8 @@
     "file_desc": ""
 }
 }
-	```
+```
+```
 | 名称         | 说明                   |
 | ------------ | ---------------------- |
 | HTTP       | 上传状态               |
@@ -45,7 +45,7 @@
 | fds_path     | 图片真实路径（暂为null） |
 | space	    | 空间名称（可用来做项目分类） |
 | file_desc   | 文件备注         			|
-
+```
 
 ###接口测试方法：
 - 获取用户jwt的token值（前提是已经注册用户，请参考手动测试的注册用户）
