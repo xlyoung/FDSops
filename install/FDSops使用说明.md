@@ -56,7 +56,8 @@
  - 参数说明：
  
 	```json
-	{
+
+{
 HTTP 200 OK
 Allow: POST, OPTIONS
 Content-Type: application/json
@@ -65,7 +66,6 @@ Vary: Accept
 {
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6Inlhbmd6aHVvaHVhIiwiZXhwIjoxNTQ2NDA2ODc5LCJlbWFpbCI6Inlhbmd6aHVvaHVhQGZhc3RlcnNvZnQuY29tLmNuIn0.oekpz_XwIiSFZSbpeEgVcraP4yXRHXtHbS7aBpzZzD4"
 }
-
 
 
 | 名称         | 说明                   |
@@ -109,9 +109,8 @@ Vary: Accept
 |ordering	|排序|
 
   - 返回参数说明：
-  
-  	```json
 
+  	```json
 HTTP 200 OK
 Allow: GET, HEAD, OPTIONS
 Content-Type: application/json
