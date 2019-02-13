@@ -1,24 +1,23 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser,FormParser,FileUploadParser
-from rest_framework import status
 from rest_framework import mixins
-from rest_framework import generics
 from rest_framework import viewsets
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from rest_framework.authentication import SessionAuthentication
 
+
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import UploadImagesMessage,UploadFileMessage
+from django.http import HttpResponse
+from io import BytesIO
+
+
+
+
 from .serializers import UploadImageSerializer,ListImageSerializer,UploadFileSerializer,ListFileSerializer
-from utils.permissions import IsOwnerOrReadOnly
-
-
-from django.shortcuts import render,render_to_response
 from .filters import ImagesFilter,FilesFilter
+from FDSops.settings import FDFS_URL
+from media_files.lib.pil_image import HandleImage
 
 
 
@@ -91,6 +90,41 @@ class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     ordering_fields = ('id', 'creat_time')
 
 
+class HandleImagesApi(APIView):
+    """
+    列出处理过的图片
+    """
 
-def test_upload(reuqest):
-    return render_to_response('upload.html')
+    def get(self,request,gid,fileid,parameter):
+        """
+        :param
+        gid: fastdfs组Id
+        fileid:图片id
+        :parameter:处理参数 sz,lg,md
+        :return:image
+        """
+        url = FDFS_URL + "group" + gid + "/" + fileid
+
+        I = HandleImage(url=url)
+        image = I.himage(parameter=parameter)
+        # 写入内存
+        buf = BytesIO()
+        # 保存图片在内存中
+        image.save(buf, 'png')
+        return HttpResponse(buf.getvalue(), content_type='image/jpeg')
+
+
+###test###
+
+
+def handle_image(request,gid,fileid,parameter):
+    url = FDFS_URL + "group" +gid +"/" +fileid
+    I = HandleImage(url=url)
+    image = I.himage(parameter=parameter)
+    print (type(image))
+    #写入内存
+    buf = BytesIO()
+    #保存图片在内存中
+    image.save(buf,'png')
+    return HttpResponse(buf.getvalue(),content_type='image/jpeg')
+

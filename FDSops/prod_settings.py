@@ -129,7 +129,6 @@ REGEX_EMAIL= "^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9
 CORS_ORIGIN_ALLOW_ALL = True
 
 
-
 # Application definition
 
 INSTALLED_APPS = [

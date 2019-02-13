@@ -1,4 +1,4 @@
-from FDSops.settings import FDFS_URL ,BASE_IMAGE_URL,IMAGE_SIZE
+from FDSops.settings import BASE_IMAGE_URL,IMAGE_SIZE
 
 import requests
 from PIL import Image
@@ -14,7 +14,10 @@ class HandleImage():
             url = BASE_IMAGE_URL
         self.url = url
         response = requests.get(self.url)
-        self.__image = Image.open(BytesIO(response.content))
+        try:
+            self.__image = Image.open(BytesIO(response.content))
+        except:
+            raise FileNotFoundError("url地址错误")
         self.size = self.__image.size
 
 
@@ -30,14 +33,16 @@ class HandleImage():
         if handle == "crop":
             print(self.size)
             box = self.clipimage()
+            #缩小尺寸到box,找到中间位置
+            region = self.__image.crop(box)
+            #切图
+            image2 = region.resize((IMAGE_SIZE[parameter][1]), Image.ANTIALIAS)
+            return image2
 
-            pass
+
         elif handle == "resize":
             image2 = self.__image.resize((IMAGE_SIZE[parameter][1]), Image.ANTIALIAS)
-            image2.show()
-            print (self.size)
             return image2
-            pass
         else:
             pass
 
@@ -45,7 +50,6 @@ class HandleImage():
     def clipimage(self):
         width = int(self.size[0])
         height = int(self.size[1])
-        box = ()
         if (width > height):
             dx = width - height
             box = (dx / 2, 0, height + dx / 2, height)

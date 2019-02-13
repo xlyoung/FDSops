@@ -8,7 +8,9 @@ from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 
-from media_files.views import ImageUploadViewSet,ImageListViewset,FileUploadViewSet,FileListViewset,test_upload
+from media_files.views import ImageUploadViewSet,ImageListViewset,\
+    FileUploadViewSet,FileListViewset,handle_image,HandleImagesApi
+
 from users.views import EmailCodeViewset,UserViewset
 
 from rest_framework_swagger.views import get_swagger_view
@@ -31,24 +33,19 @@ router.register(r'api/upload/file',FileUploadViewSet,base_name="upload_file")
 router.register(r'users', UserViewset, base_name="users")
 
 
+
 schema_view = get_swagger_view(title="FDSops")
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
     #文档
     url(r'docs/',include_docs_urls(title="FDSops")),
-
-    #swagger
-    # url(r"^docs/$", schema_view),
-    # url(r'test/',test_upload),
-
-
     #jwt的认证接口
     url(r'^login/', obtain_jwt_token),
-
     #图片列表
-    url(r'^',include(router.urls))
+    url(r'^',include(router.urls)),
+    #图片切割
+    # url(r'^group(?P<gid>[0-9])/(?P<fileid>.+)!(?P<parameter>.+)',handle_image)
+    url(r'^group(?P<gid>[0-9])/(?P<fileid>.+)!(?P<parameter>.+)',HandleImagesApi.as_view())
 ]

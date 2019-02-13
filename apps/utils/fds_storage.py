@@ -22,8 +22,16 @@ class FDFSStorage(Storage):
 
 
     def _open(self, name, mode='rb'):
-        '''打开文件时使用'''
+
+        # #读取fds配置文件
+        # client_conf_obj = get_tracker_conf(self.client_conf)
+        # # 创建一个Fdfs_client对象
+        #
+        # client = Fdfs_client(client_conf_obj)
+        #
+        # return client.get_meta_data(name,mode)
         pass
+
 
     def _save(self, name, content):
         '''保存文件时使用'''
@@ -64,4 +72,3 @@ class FDFSStorage(Storage):
     def url(self, name):
         '''返回访问文件的url路径,就是ImageField字段image的url属性的值,image.url,默认的image的url是这样的格式：'/media/001.jpg' '''
         return self.base_url + name
-
