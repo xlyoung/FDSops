@@ -48,6 +48,10 @@ class HandleImage():
 
 
     def clipimage(self):
+        """
+        处理图片，寻找中间位置
+        :return:
+        """
         width = int(self.size[0])
         height = int(self.size[1])
         if (width > height):
@@ -57,3 +61,5 @@ class HandleImage():
             dx = height - width
             box = (0, dx / 2, width, width + dx / 2)
         return box
+
+

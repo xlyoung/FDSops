@@ -10,12 +10,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import UploadImagesMessage,UploadFileMessage
 from django.http import HttpResponse
 from io import BytesIO
-
-
+import requests
+import time
 
 
 from .serializers import UploadImageSerializer,ListImageSerializer,UploadFileSerializer,ListFileSerializer
 from .filters import ImagesFilter,FilesFilter
+from utils.auth import TokenAuthtication
 from FDSops.settings import FDFS_URL
 from media_files.lib.pil_image import HandleImage
 
@@ -33,7 +34,7 @@ class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     上传图片
     """
     # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    authentication_classes = [TokenAuthtication]
 
 
     queryset = UploadImagesMessage.objects.all()
@@ -49,7 +50,7 @@ class FileUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
-
+    authentication_classes = [TokenAuthtication]
 
     queryset = UploadFileMessage.objects.all()
     parser_classes = (MultiPartParser, )
@@ -62,6 +63,7 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     图片列表页
     """
+    authentication_classes = [TokenAuthtication]
     queryset = UploadImagesMessage.objects.all()
     serializer_class = ListImageSerializer
     pagination_class = UploadPagination
@@ -78,6 +80,7 @@ class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     文件列表页
     """
+    authentication_classes = [TokenAuthtication]
     queryset = UploadFileMessage.objects.all()
     serializer_class = ListFileSerializer
     pagination_class = UploadPagination
@@ -94,7 +97,8 @@ class HandleImagesApi(APIView):
     """
     列出处理过的图片
     """
-
+    authentication_classes = [TokenAuthtication]
+    authentication_classes = []
     def get(self,request,gid,fileid,parameter):
         """
         :param
@@ -114,17 +118,20 @@ class HandleImagesApi(APIView):
         return HttpResponse(buf.getvalue(), content_type='image/jpeg')
 
 
-###test###
+class OpenFdfsImage(APIView):
+    """
+        :param
+        gid: fastdfs组Id
+        fileid:图片id
+        :return:image
+    """
 
 
-def handle_image(request,gid,fileid,parameter):
-    url = FDFS_URL + "group" +gid +"/" +fileid
-    I = HandleImage(url=url)
-    image = I.himage(parameter=parameter)
-    print (type(image))
-    #写入内存
-    buf = BytesIO()
-    #保存图片在内存中
-    image.save(buf,'png')
-    return HttpResponse(buf.getvalue(),content_type='image/jpeg')
 
+    def get(self,request,gid,fileid,):
+        url =  FDFS_URL + "group" + gid + "/" + fileid
+        # 读取fds配置文件
+        print (time.time())
+        r = requests.get(url)
+        print (time.time())
+        return HttpResponse(r.content, content_type="image/*")

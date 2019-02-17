@@ -17,10 +17,10 @@ class UploadImageSerializer(serializers.ModelSerializer):
     """
     图片的serializer
     """
-    # user = serializers.HiddenField(
-    #     default=serializers.CurrentUserDefault()
-    # )
-    user = serializers.CharField(read_only=True,default=1)
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    # user = serializers.CharField(read_only=True,default=1)
     name = serializers.CharField(read_only=True)
     creat_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
     path = serializers.SerializerMethodField()
@@ -44,10 +44,10 @@ class UploadFileSerializer(serializers.ModelSerializer):
     """
     文件的serializer
     """
-    # user = serializers.HiddenField(
-    #     default=serializers.CurrentUserDefault()
-    # )
-    user = serializers.CharField(read_only=True,default=1)
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    # user = serializers.CharField(read_only=True,default=1)
     name = serializers.CharField(read_only=True)
     creat_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M',help_text="上传时间")
     path = serializers.SerializerMethodField()

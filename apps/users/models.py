@@ -3,8 +3,9 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
 
+
+# Create your models here.
 
 class UserProfile(AbstractUser):
     """
@@ -22,6 +23,21 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+
+class UserToken(models.Model):
+    """
+    用户md5_token值
+    """
+    user = models.OneToOneField(to='UserProfile')
+    token = models.CharField(max_length=64)
+    add_time = models.DateTimeField(auto_now=datetime.now(), verbose_name="添加时间")
+
+
+
+
+
 
 class EmailVerifyCode(models.Model):
     """

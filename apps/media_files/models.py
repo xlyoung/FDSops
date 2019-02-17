@@ -17,7 +17,8 @@ class UploadImagesMessage(models.Model):
     file = models.ImageField( blank=True, verbose_name='上传图片地址')
     creat_time = models.DateTimeField(default=datetime.now, verbose_name="上传时间")
     space = models.CharField(max_length=100, null=True,blank=True,verbose_name="空间名")
-    user = models.CharField(max_length=100, verbose_name="用户")
+    # user = models.CharField(max_length=100, verbose_name="用户")
+    user = models.ForeignKey(User, verbose_name="用户")
     file_desc = UEditorField(verbose_name=u"内容", imagePath="images/", width=1000, height=300,
                                filePath="files/", null=True,blank=True,default='')
 
@@ -37,8 +38,8 @@ class UploadFileMessage(models.Model):
     file = models.FileField( blank=True, verbose_name='上传文件地址')
     creat_time = models.DateTimeField(default=datetime.now, verbose_name="上传时间")
     space = models.CharField(max_length=100, null=True,blank=True,verbose_name="空间名")
-    # user = models.ForeignKey(User, verbose_name="用户")
-    user = models.CharField(max_length=100,verbose_name="用户")
+    user = models.ForeignKey(User, verbose_name="用户")
+    # user = models.CharField(max_length=100,verbose_name="用户")
     file_desc = UEditorField(verbose_name=u"内容", imagePath="images/", width=1000, height=300,
                                filePath="files/", null=True,blank=True,default='')
 

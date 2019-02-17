@@ -46,8 +46,6 @@ class FDFSStorage(Storage):
 
         # 上传文件到fast dfs系统中
         res = client.upload_by_buffer(content.read())
-
-
         # dict
         # {
         #     'Group name': group_name,
