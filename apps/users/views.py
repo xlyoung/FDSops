@@ -18,6 +18,7 @@ from .models import EmailVerifyCode,UserToken
 from  utils.email import SendMail
 from .lib.md5_token import md5
 from utils.auth import TokenAuthtication
+from rest_framework.versioning import URLPathVersioning
 
 
 
@@ -71,6 +72,8 @@ class EmailCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
     发送短信验证码
     """
 
+    #版本控制
+    versioning_class = URLPathVersioning
     serializer_class = EmailSerializers
 
 
@@ -117,6 +120,8 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
     """
     用户
     """
+    #版本控制
+    versioning_class = URLPathVersioning
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
 

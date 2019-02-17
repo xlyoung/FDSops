@@ -19,7 +19,7 @@ from .filters import ImagesFilter,FilesFilter
 from utils.auth import TokenAuthtication
 from FDSops.settings import FDFS_URL
 from media_files.lib.pil_image import HandleImage
-
+from rest_framework.versioning import URLPathVersioning
 
 
 class UploadPagination(PageNumberPagination):
@@ -35,6 +35,8 @@ class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     authentication_classes = [TokenAuthtication]
+    #版本控制
+    versioning_class = URLPathVersioning
 
 
     queryset = UploadImagesMessage.objects.all()
@@ -51,6 +53,8 @@ class FileUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     authentication_classes = [TokenAuthtication]
+    #版本控制
+    versioning_class = URLPathVersioning
 
     queryset = UploadFileMessage.objects.all()
     parser_classes = (MultiPartParser, )
@@ -64,6 +68,8 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     图片列表页
     """
     authentication_classes = [TokenAuthtication]
+    #版本控制
+    versioning_class = URLPathVersioning
     queryset = UploadImagesMessage.objects.all()
     serializer_class = ListImageSerializer
     pagination_class = UploadPagination
@@ -81,6 +87,8 @@ class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     文件列表页
     """
     authentication_classes = [TokenAuthtication]
+    #版本控制
+    versioning_class = URLPathVersioning
     queryset = UploadFileMessage.objects.all()
     serializer_class = ListFileSerializer
     pagination_class = UploadPagination
@@ -98,7 +106,6 @@ class HandleImagesApi(APIView):
     列出处理过的图片
     """
     authentication_classes = [TokenAuthtication]
-    authentication_classes = []
     def get(self,request,gid,fileid,parameter):
         """
         :param
@@ -126,8 +133,6 @@ class OpenFdfsImage(APIView):
         :return:image
     """
 
-
-
     def get(self,request,gid,fileid,):
         url =  FDFS_URL + "group" + gid + "/" + fileid
         # 读取fds配置文件
@@ -135,3 +140,5 @@ class OpenFdfsImage(APIView):
         r = requests.get(url)
         print (time.time())
         return HttpResponse(r.content, content_type="image/*")
+
+

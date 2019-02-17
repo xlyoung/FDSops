@@ -4,7 +4,6 @@ from django.conf.urls import url, include
 
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken import views
 import xadmin
 
 
@@ -20,17 +19,17 @@ from rest_framework_swagger.views import get_swagger_view
 router = DefaultRouter()
 
 #配置images
-router.register(r'api/v1/list_images',ImageListViewset,base_name="list_image")
+router.register(r'api/(?P<version>[v1|v2]+)/list_images',ImageListViewset,base_name="list_image")
 #配置files
-router.register(r'api/v1/list_files',FileListViewset,base_name="list_file")
+router.register(r'api/(?P<version>[v1|v2]+)/list_files',FileListViewset,base_name="list_file")
 #短信验证码生成
-router.register(r'api/v1/codes', EmailCodeViewset, base_name="codes")
+router.register(r'api/(?P<version>[v1|v2]+)/codes', EmailCodeViewset, base_name="codes")
 #上传图片
-router.register(r'api/v1/upload/image',ImageUploadViewSet,base_name="upload_image")
+router.register(r'api/(?P<version>[v1|v2]+)/upload/image',ImageUploadViewSet,base_name="upload_image")
 #上传文件
-router.register(r'api/v1/upload/file',FileUploadViewSet,base_name="upload_file")
+router.register(r'api/(?P<version>[v1|v2]+)/upload/file',FileUploadViewSet,base_name="upload_file")
 #用户注册
-router.register(r'api/v1/users', UserViewset, base_name="users")
+router.register(r'api/(?P<version>[v1|v2]+)/users', UserViewset, base_name="users")
 
 
 
