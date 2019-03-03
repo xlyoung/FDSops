@@ -4,7 +4,7 @@ from rest_framework.parsers import MultiPartParser,FormParser,FileUploadParser
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework import filters
-
+from rest_framework import permissions
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import UploadImagesMessage,UploadFileMessage
@@ -22,58 +22,26 @@ from media_files.lib.pil_image import HandleImage
 from rest_framework.versioning import URLPathVersioning
 
 
-class UploadPagination(PageNumberPagination):
+class MediaPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     page_query_param = "page"
     max_page_size = 100
 
-class ImageUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class ImageViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     create:
     上传图片
+    list:
+    列出图片
     """
-    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     authentication_classes = [TokenAuthtication]
     #版本控制
     versioning_class = URLPathVersioning
-
-
     queryset = UploadImagesMessage.objects.all()
     parser_classes = (MultiPartParser, )
     serializer_class = UploadImageSerializer
-
-
-
-class FileUploadViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    """
-    create:
-    上传文件
-    """
-    # permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    # authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
-    authentication_classes = [TokenAuthtication]
-    #版本控制
-    versioning_class = URLPathVersioning
-
-    queryset = UploadFileMessage.objects.all()
-    parser_classes = (MultiPartParser, )
-    serializer_class = UploadFileSerializer
-
-
-
-
-class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
-    """
-    图片列表页
-    """
-    authentication_classes = [TokenAuthtication]
-    #版本控制
-    versioning_class = URLPathVersioning
-    queryset = UploadImagesMessage.objects.all()
-    serializer_class = ListImageSerializer
-    pagination_class = UploadPagination
-
+    pagination_class = MediaPagination
 
     #过滤
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
@@ -82,16 +50,28 @@ class ImageListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     ordering_fields = ('id', 'creat_time')
 
 
-class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
+    def get_serializer_class(self):
+        if self.action == "create":
+            return UploadImageSerializer
+        elif self.action == "list":
+            return ListImageSerializer
+
+class FileViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     """
-    文件列表页
+    create:
+    上传文件
+    list:
+    列出文件
     """
+    # TOKEN认证
     authentication_classes = [TokenAuthtication]
     #版本控制
     versioning_class = URLPathVersioning
+
     queryset = UploadFileMessage.objects.all()
-    serializer_class = ListFileSerializer
-    pagination_class = UploadPagination
+    parser_classes = (MultiPartParser, )
+    serializer_class = UploadFileSerializer
+    pagination_class = MediaPagination
 
 
     #过滤
@@ -100,12 +80,21 @@ class FileListViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     search_fields = ('name', 'space')
     ordering_fields = ('id', 'creat_time')
 
+    #获取Serializer
+    def get_serializer_class(self):
+        if self.action == "create":
+            return UploadFileSerializer
+        elif self.action == "list":
+            return ListFileSerializer
+
 
 class HandleImagesApi(APIView):
     """
     列出处理过的图片
     """
-    authentication_classes = [TokenAuthtication]
+
+    # TOKEN认证
+    # authentication_classes = [TokenAuthtication]
     def get(self,request,gid,fileid,parameter):
         """
         :param

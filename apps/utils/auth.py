@@ -14,6 +14,7 @@ class TokenAuthtication(BaseAuthentication):
     def authenticate(self, request):
         token = request._request.GET.get('token')
         token_obj = models.UserToken.objects.filter(token=token).first()
+        print (token_obj)
         if not token_obj:
             raise exceptions.AuthenticationFailed('用户认证失败')
         now = datetime.now()
