@@ -76,10 +76,6 @@ class ListFileSerializer(serializers.ModelSerializer):
         model = UploadFileMessage
         fields = '__all__'
 
-
-
-
-
 class ListImageSerializer(serializers.ModelSerializer):
     """
     图片列表
@@ -87,3 +83,4 @@ class ListImageSerializer(serializers.ModelSerializer):
     class Meta():
         model = UploadImagesMessage
         fields = '__all__'
+
