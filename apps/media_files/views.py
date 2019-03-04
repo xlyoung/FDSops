@@ -4,10 +4,14 @@ from rest_framework.parsers import MultiPartParser,FormParser,FileUploadParser
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework import filters
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission,IsAuthenticated
+from rest_framework import status
+from rest_framework.response import Response
+
+
 
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import UploadImagesMessage,UploadFileMessage
+from .models import ImagesMessage,FileMessage
 from django.http import HttpResponse
 from io import BytesIO
 import requests
@@ -20,6 +24,7 @@ from utils.auth import TokenAuthtication
 from FDSops.settings import FDFS_URL
 from media_files.lib.pil_image import HandleImage
 from rest_framework.versioning import URLPathVersioning
+from apps.utils.ModulePermission import ModulePermission
 
 
 class MediaPagination(PageNumberPagination):
@@ -38,10 +43,14 @@ class ImageViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.Generi
     authentication_classes = [TokenAuthtication]
     #版本控制
     versioning_class = URLPathVersioning
-    queryset = UploadImagesMessage.objects.all()
+    queryset = ImagesMessage.objects.all()
     parser_classes = (MultiPartParser, )
     serializer_class = UploadImageSerializer
     pagination_class = MediaPagination
+    #权限控制
+    permission_classes = [ModulePermission]
+    #所需的权限
+    module_perms = ['image.upload']
 
     #过滤
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
@@ -56,6 +65,7 @@ class ImageViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.Generi
         elif self.action == "list":
             return ListImageSerializer
 
+
 class FileViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     create:
@@ -68,7 +78,7 @@ class FileViewSet(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.Generic
     #版本控制
     versioning_class = URLPathVersioning
 
-    queryset = UploadFileMessage.objects.all()
+    queryset = FileMessage.objects.all()
     parser_classes = (MultiPartParser, )
     serializer_class = UploadFileSerializer
     pagination_class = MediaPagination

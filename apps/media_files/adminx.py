@@ -11,8 +11,8 @@
 @time: 2018/11/25
 """
 import xadmin
-from .models import UploadImagesMessage
-from .models import UploadFileMessage
+from .models import ImagesMessage
+from .models import FileMessage
 
 
 class UploadImageMessageAdmin(object):
@@ -73,8 +73,8 @@ class UploadFileMessageAdmin(object):
 
 
 
-xadmin.site.register(UploadImagesMessage, UploadImageMessageAdmin)
-xadmin.site.register(UploadFileMessage, UploadFileMessageAdmin)
+xadmin.site.register(ImagesMessage, UploadImageMessageAdmin)
+xadmin.site.register(FileMessage, UploadFileMessageAdmin)
 
 
 

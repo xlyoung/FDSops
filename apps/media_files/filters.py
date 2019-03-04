@@ -5,7 +5,7 @@ import django_filters
 from django.db.models import Q
 from django.db import models as django_models
 
-from .models import UploadImagesMessage,UploadFileMessage
+from .models import ImagesMessage,FileMessage
 
 
 class ImagesFilter(django_filters.rest_framework.FilterSet):
@@ -22,7 +22,7 @@ class ImagesFilter(django_filters.rest_framework.FilterSet):
 
 
     class Meta:
-        model = UploadImagesMessage
+        model = ImagesMessage
         fields = ['id',"name","file","space","user"]
 
 
@@ -40,5 +40,5 @@ class FilesFilter(django_filters.rest_framework.FilterSet):
 
 
     class Meta:
-        model = UploadFileMessage
+        model = FileMessage
         fields = ['id',"name","file","space","user"]

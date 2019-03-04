@@ -34,11 +34,6 @@ class UserToken(models.Model):
     token = models.CharField(max_length=64)
     add_time = models.DateTimeField(auto_now=datetime.now(), verbose_name="添加时间")
 
-
-
-
-
-
 class EmailVerifyCode(models.Model):
     """
     邮件验证码
@@ -51,7 +46,14 @@ class EmailVerifyCode(models.Model):
         verbose_name = "邮件验证码"
         verbose_name_plural = verbose_name
 
-
-
     def __str__(self):
         return self.code
+
+
+class ModulePermission(models.Model):
+    class Meta:
+        # 定义权限，放在用户管理
+        permissions = (
+            ("image.upload", u"图片管理-上传信息"),
+            ("image.list", u"图片管理-列表信息"),
+        )
