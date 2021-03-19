@@ -17,7 +17,7 @@ django-filter==2.0.0
 django-formtools==2.1
 django-guardian==1.4.9
 django-rest-swagger==2.2.0
-djangorestframework==3.9.0
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 filetype==1.0.1
 future==0.17.1
